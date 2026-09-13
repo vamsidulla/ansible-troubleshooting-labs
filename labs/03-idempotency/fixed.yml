@@ -1,0 +1,17 @@
+---
+- name: Converge a fully managed feature file
+  hosts: lab
+  gather_facts: false
+  vars:
+    lab_dir: "{{ playbook_dir }}/../../.lab-output/03"
+  tasks:
+    - name: Ensure the lab directory exists
+      ansible.builtin.file:
+        path: "{{ lab_dir }}"
+        state: directory
+        mode: '0755'
+    - name: Define the complete desired contents
+      ansible.builtin.copy:
+        content: "feature=true\n"
+        dest: "{{ lab_dir }}/features.conf"
+        mode: '0644'

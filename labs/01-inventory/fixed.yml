@@ -1,0 +1,17 @@
+---
+- name: Configure the lab hosts
+  hosts: lab
+  gather_facts: false
+  vars:
+    lab_dir: "{{ playbook_dir }}/../../.lab-output/01"
+  tasks:
+    - name: Ensure the lab directory exists
+      ansible.builtin.file:
+        path: "{{ lab_dir }}"
+        state: directory
+        mode: '0755'
+    - name: Record a successfully targeted host
+      ansible.builtin.copy:
+        content: "host reached\n"
+        dest: "{{ lab_dir }}/result.txt"
+        mode: '0644'

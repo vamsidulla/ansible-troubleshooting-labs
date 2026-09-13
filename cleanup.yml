@@ -1,0 +1,9 @@
+---
+- name: Remove only the generated files for this lab collection
+  hosts: lab
+  gather_facts: false
+  tasks:
+    - name: Remove this checkout's lab output directory
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/.lab-output"
+        state: absent

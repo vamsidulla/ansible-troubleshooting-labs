@@ -1,0 +1,25 @@
+---
+- name: Update configuration and notify the activation handler
+  hosts: lab
+  gather_facts: false
+  vars:
+    lab_dir: "{{ playbook_dir }}/../../.lab-output/04"
+  tasks:
+    - name: Ensure the lab directory exists
+      ansible.builtin.file:
+        path: "{{ lab_dir }}"
+        state: directory
+        mode: '0755'
+    - name: Deploy version two
+      ansible.builtin.copy:
+        content: "version=2\n"
+        dest: "{{ lab_dir }}/app.conf"
+        mode: '0644'
+      notify: Activate application configuration
+  handlers:
+    - name: Activate application configuration
+      ansible.builtin.copy:
+        src: "{{ lab_dir }}/app.conf"
+        dest: "{{ lab_dir }}/active.conf"
+        remote_src: true
+        mode: '0644'

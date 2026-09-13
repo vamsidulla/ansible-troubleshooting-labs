@@ -1,0 +1,26 @@
+---
+- name: Validate and render developer application settings
+  hosts: lab
+  gather_facts: false
+  vars:
+    lab_dir: "{{ playbook_dir }}/../../.lab-output/02"
+    service_port: 8080
+  tasks:
+    - name: Ensure the lab directory exists
+      ansible.builtin.file:
+        path: "{{ lab_dir }}"
+        state: directory
+        mode: '0755'
+    - name: Validate the required port before rendering
+      ansible.builtin.assert:
+        that:
+          - service_port is defined
+          - service_port is integer
+          - service_port > 0
+          - service_port < 65536
+        fail_msg: service_port must be an integer from 1 to 65535
+    - name: Render application configuration
+      ansible.builtin.template:
+        src: templates/app.conf.j2
+        dest: "{{ lab_dir }}/app.conf"
+        mode: '0644'

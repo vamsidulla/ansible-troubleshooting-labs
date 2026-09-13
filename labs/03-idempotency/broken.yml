@@ -1,0 +1,16 @@
+---
+- name: Enable a feature using an append command
+  hosts: lab
+  gather_facts: false
+  vars:
+    lab_dir: "{{ playbook_dir }}/../../.lab-output/03"
+  tasks:
+    - name: Ensure the lab directory exists
+      ansible.builtin.file:
+        path: "{{ lab_dir }}"
+        state: directory
+        mode: '0755'
+    - name: Append the feature flag
+      ansible.builtin.shell: "printf 'feature=true\n' >> features.conf"
+      args:
+        chdir: "{{ lab_dir }}"

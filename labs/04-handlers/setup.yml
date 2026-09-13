@@ -1,0 +1,20 @@
+---
+- name: Reset the simulated application to version one
+  hosts: lab
+  gather_facts: false
+  vars:
+    lab_dir: "{{ playbook_dir }}/../../.lab-output/04"
+  tasks:
+    - name: Ensure the lab directory exists
+      ansible.builtin.file:
+        path: "{{ lab_dir }}"
+        state: directory
+        mode: '0755'
+    - name: Reset configured and active versions for the experiment
+      ansible.builtin.copy:
+        content: "version=1\n"
+        dest: "{{ lab_dir }}/{{ item }}"
+        mode: '0644'
+      loop:
+        - app.conf
+        - active.conf
